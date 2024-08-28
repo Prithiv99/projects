@@ -5,6 +5,11 @@ from tensorflow.keras.models import load_model
 # Load your trained model
 model = load_model('android_permission.h5')
 
+# Function to make predictions
+def predict_result(input_data):
+    prediction = model.predict(input_data)
+    return prediction
+
 # Define the feature names (as given)
 features = [
     "android.permission.GET_ACCOUNTS", "com.sonyericsson.home.permission.BROADCAST_BADGE", 
