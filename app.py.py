@@ -55,8 +55,8 @@ features = [
     "android.permission.PROCESS_INCOMING_CALLS"
 ]
 
-# Collecting user input for each permission
-permission_features = {feature: st.checkbox(feature, key=feature) for feature in features}
+# Collecting user input for each permission with unique keys
+permission_features = {feature: st.checkbox(f"{feature}_{i}", key=f"{i}_{feature}") for i, feature in enumerate(features)}
 
 # Convert user input to numpy array for prediction
 input_data = np.array([[int(permission_features[feature]) for feature in features]])
