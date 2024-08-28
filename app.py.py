@@ -21,8 +21,13 @@ permission_features = {
     "android.permission.CAMERA": st.checkbox("CAMERA", key="camera"),
     "android.permission.ACCESS_FINE_LOCATION": st.checkbox("ACCESS FINE LOCATION", key="access_fine_location"),
     "android.permission.SEND_SMS": st.checkbox("SEND SMS", key="send_sms"),
-    # Add more checkboxes with unique keys...
+    "android.permission.READ_CONTACTS": st.checkbox("READ CONTACTS", key="read_contacts"),
+    "android.permission.WRITE_EXTERNAL_STORAGE": st.checkbox("WRITE EXTERNAL STORAGE", key="write_external_storage"),
+    "android.permission.RECORD_AUDIO": st.checkbox("RECORD AUDIO", key="record_audio"),
+    "android.permission.READ_SMS": st.checkbox("READ SMS", key="read_sms"),
+    "android.permission.ACCESS_WIFI_STATE": st.checkbox("ACCESS WIFI STATE", key="access_wifi_state"),
 }
+
 
 # Convert user input to numpy array for prediction
 input_data = np.array([[int(permission_features[feature]) for feature in permission_features]])
