@@ -1,6 +1,5 @@
-import streamlit as st
 import numpy as np
-import tensorflow as tf
+import streamlit as st
 from tensorflow.keras.models import load_model
 
 # Load your trained model
@@ -11,31 +10,38 @@ def predict_result(input_data):
     prediction = model.predict(input_data)
     return prediction
 
-# Streamlit app title
-st.title("Android Permissions Classification")
-
-# Define permission features based on your dataset
+# Collecting user input for each permission (example with 10 features)
 permission_features = {
     "android.permission.GET_ACCOUNTS": st.checkbox("GET ACCOUNTS", key="get_accounts"),
     "android.permission.READ_PROFILE": st.checkbox("READ PROFILE", key="read_profile"),
     "android.permission.CAMERA": st.checkbox("CAMERA", key="camera"),
     "android.permission.ACCESS_FINE_LOCATION": st.checkbox("ACCESS FINE LOCATION", key="access_fine_location"),
     "android.permission.SEND_SMS": st.checkbox("SEND SMS", key="send_sms"),
-    "android.permission.RECEIVE_SMS": st.checkbox("RECEIVE SMS", key="receive_sms"),
     "android.permission.READ_CONTACTS": st.checkbox("READ CONTACTS", key="read_contacts"),
     "android.permission.WRITE_EXTERNAL_STORAGE": st.checkbox("WRITE EXTERNAL STORAGE", key="write_external_storage"),
-    "android.permission.READ_EXTERNAL_STORAGE": st.checkbox("READ EXTERNAL STORAGE", key="read_external_storage"),
-    # Add more checkboxes as needed...
+    "android.permission.RECORD_AUDIO": st.checkbox("RECORD AUDIO", key="record_audio"),
+    "android.permission.READ_SMS": st.checkbox("READ SMS", key="read_sms"),
+    "android.permission.ACCESS_WIFI_STATE": st.checkbox("ACCESS WIFI STATE", key="access_wifi_state"),
 }
 
 # Convert user input to numpy array for prediction
-# Assuming you have 9 features from checkboxes
 input_data = np.array([[int(permission_features[feature]) for feature in permission_features]])
 
-# Padding the input data to match the required shape (add 77 zeros)
-input_data_padded = np.pad(input_data, ((0, 0), (0, 77)), 'constant', constant_values=0)
+# Padding the input data to match the required shape (if needed)
+required_features = 86  # Adjust this to match your model's input shape
+if input_data.shape[1] < required_features:
+    input_data = np.pad(input_data, ((0, 0), (0, required_features - input_data.shape[1])), 'constant', constant_values=0)
 
-# Use the padded input data for prediction
+# Debug: Show the input data
+st.write("Input Data:", input_data)
+
+# Prediction
 if st.button("Predict"):
-    prediction = predict_result(input_data_padded)
-    st.write("Prediction Result:", "Malicious" if prediction[0][0] > 0.5 else "Benign")
+    prediction = predict_result(input_data)
+    
+    # Debug: Show the raw prediction output
+    st.write("Raw Prediction Output:", prediction)
+    
+    # Assuming prediction[0][0] is the probability for "Malicious"
+    result = "Malicious" if prediction[0][0] > 0.5 else "Benign"
+    st.write("Prediction Result:", result)
