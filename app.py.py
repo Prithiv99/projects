@@ -29,21 +29,13 @@ permission_features = {
 }
 
 # Convert user input to numpy array for prediction
+# Assuming you have 9 features from checkboxes
 input_data = np.array([[int(permission_features[feature]) for feature in permission_features]])
 
-# Debugging: Print the shape of the input data
-st.write("Input data shape:", input_data.shape)
+# Padding the input data to match the required shape (add 77 zeros)
+input_data_padded = np.pad(input_data, ((0, 0), (0, 77)), 'constant', constant_values=0)
 
-# Prediction
+# Use the padded input data for prediction
 if st.button("Predict"):
-    try:
-        prediction = predict_result(input_data)
-        st.write("Prediction Result:", "Malicious" if prediction[0][0] > 0.5 else "Benign")
-    except ValueError as e:
-        st.error(f"Error: {str(e)}")
-        st.error("Please ensure that the input data shape matches the model's expected input shape.")
-
-# Add some information about the app
-st.sidebar.title("About")
-st.sidebar.info("This app classifies Android applications as malicious or benign based on the permissions they request. "
-                "Select the permissions that your app requires, and click 'Predict' to see the result.")
+    prediction = predict_result(input_data_padded)
+    st.write("Prediction Result:", "Malicious" if prediction[0][0] > 0.5 else "Benign")
