@@ -2,17 +2,17 @@ import numpy as np
 import streamlit as st
 from tensorflow.keras.models import load_model
 
-# Load your trained model
+
 model = load_model('android_permission.h5')
 
-st.title("NATICUSdroid")
+st.title("    NATICUSdroid")
 st.title("Android Permissions - Classification")
-# Function to make predictions
+
 def predict_result(input_data):
     prediction = model.predict(input_data)
     return prediction
 
-# Define the feature names (as given)
+
 features = [
     "android.permission.GET_ACCOUNTS", "com.sonyericsson.home.permission.BROADCAST_BADGE", 
     "android.permission.READ_PROFILE", "android.permission.MANAGE_ACCOUNTS", 
@@ -62,29 +62,22 @@ features = [
     "android.permission.PROCESS_INCOMING_CALLS"
 ]
 
-# Collecting user input for each permission with unique keys
 permission_features = {feature: st.checkbox(f"{feature}_{i}", key=f"{i}_{feature}") for i, feature in enumerate(features)}
 
-# Convert user input to numpy array for prediction
 input_data = np.array([[int(permission_features[feature]) for feature in features]])
 
-# No need for padding if the input_data matches the required shape
 required_features = len(features)
 if input_data.shape[1] != required_features:
     st.write("Input data shape does not match model's required input shape.")
 else:
-    # Debug: Show the input data
     st.write("Input Data:", input_data)
 
-    # Prediction
     if st.button("Predict"):
         try:
             prediction = predict_result(input_data)
             
-            # Debug: Show the raw prediction output
             st.write("Raw Prediction Output:", prediction)
             
-            # Assuming prediction[0][0] is the probability for "Malicious"
             result = "Malicious" if prediction[0][0] > 0.5 else "Benign"
             st.write("Prediction Result:", result)
         except Exception as e:
